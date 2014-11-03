@@ -1,7 +1,7 @@
 //testing for questions collection existence
 var assert = require('assert');
 
-suite('Posts', function() {
+suite('Questions', function() {
 
     // making sure the tests run
   test('tests can be run', function() {
@@ -10,7 +10,7 @@ suite('Posts', function() {
 
   test('in the server', function(done, server) {
     server.eval(function() {
-      Questions.insert({question: 'do I smell bad when I go out with my friends ? ', createdAt: new Date() });
+      Questions.insert({question: 'do I smell bad when I go out with my friends ? '});
       var quests = Questions.find().fetch();
       emit('questions fetched', quests);
     });
