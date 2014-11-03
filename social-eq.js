@@ -9,6 +9,7 @@ if (Meteor.isClient) {
   });
 }
 
+
 Meteor.methods({
   addQuestion: function (question) {
     // Make sure the user is logged in before inserting a task
