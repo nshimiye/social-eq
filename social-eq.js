@@ -8,3 +8,14 @@ if (Meteor.isClient) {
     ]
   });
 }
+
+Questions = new Mongo.Collection("questions");
+
+if (Meteor.isClient) {
+  // This code only runs on the client
+  Template.body.helpers({
+    questions: function () {
+      return Questions.find({});
+    }
+  });
+}

@@ -9,13 +9,13 @@
     </header>
 
     <ul>
-      {{#each tasks}}
-        {{> task}}
+      {{#each questions}}
+        {{> questionTPL}}
       {{/each}}
     </ul>
   </div>
 </body>
 
-<template name="task">
-  <li>{{text}}</li>
+<template name="questionTPL">
+  <li>{{question}}</li>
 </template>
