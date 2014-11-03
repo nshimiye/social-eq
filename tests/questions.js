@@ -8,6 +8,25 @@ suite('Questions', function() {
     assert.equal((1).toString(), "1",'one is equal to one');
   });
 
+test('with with async style', function(done, server, client) {
+  server.eval(function() {
+    setTimeout(function() {
+      emit('result', {a: 10});
+    }, 10);
+  });
+
+  server.on('result', function(data) {
+    client.eval(function(data) {
+      emit('result', data.a + 10);
+    }, data);
+  });
+
+  client.on('result', function(finalResult) {
+    assert.equal(finalResult, 20);
+    done();
+  });
+});
+
 /*
   test('in the server', function(done, server) {
     server.eval(function() {
@@ -22,13 +41,6 @@ suite('Questions', function() {
     });
   });
   */
+
 });
 
-describe('Array', function(){
-  describe('#indexOf()', function(){
-    it('should return -1 when the value is not present', function(){
-      [1,2,3].indexOf(5).should.equal(-1);
-      [1,2,3].indexOf(0).should.equal(-1);
-    });
-  });
-});
