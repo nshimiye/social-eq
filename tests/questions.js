@@ -5,7 +5,7 @@ suite('Posts', function() {
 
     // making sure the tests run
   test('tests can be run', function() {
-    assert.equal(1 === 1, 'one is equal to one');
+    assert.equal((1).toString(), "1",'one is equal to one');
     done();
   });
 
