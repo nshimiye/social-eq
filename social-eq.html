@@ -5,9 +5,21 @@
 <body>
   <div class="container">
     <header>
-      <h1>Social EQ</h1>
-    </header>
+      <h1>Social EQ ({{incompleteCount}})</h1>
 
+      <!-- filtering headers -->
+      <label class="hide-completed">
+        <input type="checkbox" checked="{{hideCompleted}}" />
+        Hide Completed Task
+        {{> loginButtons}}
+      </label>
+
+      {{#if currentUser}}
+      <form class="new-question">
+        <input type="text" name="question" placeholder="Type a new question here" />
+      </form>
+      {{/if}}
+    </header>
     <ul>
       {{#each questions}}
         {{> questionTPL}}
@@ -17,5 +29,12 @@
 </body>
 
 <template name="questionTPL">
-  <li>{{question}}</li>
+  <li class="{{#if checked}}checked{{/if}}">
+
+    <button class="delete">&times;</button>
+
+    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
+
+    <span class="text"><strong>{{username}}</strong>{{question}}</span>
+  </li>
 </template>
