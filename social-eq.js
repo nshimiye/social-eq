@@ -1,6 +1,7 @@
 Questions = new Mongo.Collection("questions");
 
 if (Meteor.isClient) {
+  Meteor.subscribe("questions");
   // This code only runs on the client
   Template.body.helpers({
     questions: function () {
@@ -41,6 +42,11 @@ if (Meteor.isClient) {
       Meteor.call("setChecked", this._id, ! this.checked);
 
     },
+    "click .toggle-private": function(){
+      //set the checked property to the opposite of its current value
+      Meteor.call("setPrivate", this._id, ! this.private);
+
+    },
     "click .delete": function(){
       Meteor.call("deleteQuestion", this._id);
 
@@ -51,6 +57,15 @@ if (Meteor.isClient) {
     }
 
   });
+
+
+Template.questionTPL.helpers({
+  isOwner: function(){
+    return this.owner === Meteor.userId();
+  }
+});
+
+
 }
 
 // Accounts.ui.config({
@@ -72,9 +87,43 @@ Meteor.methods({
     });
   },
   deleteQuestion: function (questionId) {
+    var question = Questions.findOne(questionId);
+    // only task owner can make this private
+    if (question.private && question.owner !== Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
     Questions.remove(questionId);
   },
   setChecked: function (questionId, setChecked) {
+    var question = Questions.findOne(questionId);
+    // only task owner can make this private
+    if (question.private && question.owner !== Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
     Questions.update(questionId, { $set: { checked: setChecked} });
+  },
+  setPrivate: function (questionId, setPrivate) {
+
+    var question = Questions.findOne(questionId);
+    // only task owner can make this private
+    if (question.owner !== Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Questions.update(questionId, { $set: { private: setPrivate} });
   }
 });
+
+
+if (Meteor.isServer) {
+  Meteor.publish("questions", function () {
+    return Questions.find({
+      $or: [
+        { private: {$ne: true} },
+        { owner: this.userId }
+      ]
+    });
+  });
+};
